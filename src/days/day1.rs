@@ -5,10 +5,12 @@ use crate::Answer;
 pub fn solution<T: AsRef<Path>>(input: T) -> crate::Answer<u64, u64> {
     let file: Vec<u64> = fs::read_to_string(input)
         .expect("Could not open input file")
-        .split('\n')
-        .map(|a| a.parse::<u64>())
-        .collect::<Result<Vec<_>, _>>()
-        .expect("Could not parse input data");
+        .split_whitespace()
+        .map(|a| {
+            dbg!(a);
+            a.parse::<u64>().unwrap()
+        })
+        .collect();
 
     let v = (file).iter();
     let v_1 = (file).iter().skip(1);
