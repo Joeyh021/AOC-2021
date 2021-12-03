@@ -1,8 +1,6 @@
 use std::{fs, path::Path};
 
-use crate::Answer;
-
-pub fn solution<T: AsRef<Path>>(input: T) -> crate::Answer<u64, u64> {
+pub fn solution<T: AsRef<Path>>(input: T) -> (String, String) {
     let file: Vec<u64> = fs::read_to_string(input)
         .expect("Could not open input file")
         .split_whitespace()
@@ -41,5 +39,5 @@ pub fn solution<T: AsRef<Path>>(input: T) -> crate::Answer<u64, u64> {
         }
     }
     //part 2
-    Answer(count, count2)
+    (count.to_string(), count2.to_string())
 }
