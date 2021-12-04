@@ -1,10 +1,9 @@
 use core::panic;
-use std::fs;
 
-pub fn solution(input: &str) -> (String, String) {
-    let file = fs::read_to_string(input).expect("Could not open input file");
+use crate::Answer;
 
-    let bits: Vec<Vec<u32>> = file
+pub fn solution(input: String) -> Answer<u32, u32> {
+    let bits: Vec<Vec<u32>> = input
         .split_whitespace()
         .map(|line| {
             line.chars()
@@ -25,7 +24,7 @@ pub fn solution(input: &str) -> (String, String) {
     let epsilon =
         bitvec_to_num(column_counts.map(|(zeros, ones)| if zeros > ones { 1 } else { 0 }));
 
-    let part1 = (gamma * epsilon).to_string();
+    let part1 = gamma * epsilon;
 
     let mut oxygen_rating: Vec<Vec<u32>> = bits.clone();
     let mut column_n: usize = 0;
@@ -51,7 +50,7 @@ pub fn solution(input: &str) -> (String, String) {
 
     let part2 = bitvec_to_num(oxygen_rating[0].clone()) * bitvec_to_num(co2_rating[0].clone());
 
-    (part1, part2.to_string())
+    Answer(part1, part2)
 }
 
 fn count_bits(bits: impl IntoIterator<Item = u32>) -> (u32, u32) {

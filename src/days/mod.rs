@@ -1,15 +1,21 @@
+use crate::Solution;
+use std::{fmt::Display, io};
+
 mod day1;
 mod day2;
 mod day3;
 
-pub fn solve_day(day: u32) {
-    let answer: (String, String) = match day {
-        1 => day1::solution("input/01.txt"),
-        2 => day2::solution("input/02.txt"),
-        3 => day3::solution("input/03.txt"),
-        _ => panic!("Not done this day yet"),
-    };
-    println!("Day {} solution:", day);
-    println!("Part 1: {}", answer.0);
-    println!("Part 2: {}", answer.1);
+pub fn solve_day(day: u32) -> Result<(), io::Error> {
+    match day {
+        1 => solve(day1::solution, std::fs::read_to_string("input/01.txt")?),
+        2 => solve(day2::solution, std::fs::read_to_string("input/02.txt")?),
+        3 => solve(day3::solution, std::fs::read_to_string("input/03.txt")?),
+        _ => panic!("Day not done yet"),
+    }
+    Ok(())
+}
+fn solve<S: Display, T: Display>(solution: Solution<S, T>, input: String) {
+    let sln = solution(input);
+    println!("Part 1: {}", sln.0);
+    println!("Part 2: {}", sln.1);
 }

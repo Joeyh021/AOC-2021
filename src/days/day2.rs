@@ -1,18 +1,16 @@
+use crate::Answer;
 use regex::Regex;
-use std::{fs, path::Path};
 enum Direction {
     Forward(i32),
     Down(i32),
     Up(i32),
 }
 
-pub fn solution<T: AsRef<Path>>(input: T) -> (String, String) {
+pub fn solution(input: String) -> Answer<i32, i32> {
     let re = Regex::new(r"(forward |up |down )(\d+)").expect("regex not valid");
 
-    let file = fs::read_to_string(input).expect("Could not open input file");
-
     let data: Vec<Direction> = re
-        .captures_iter(&file)
+        .captures_iter(&input)
         .map(|line| {
             let n: i32 = line[2].parse().expect("Regex fail");
             match &line[1] {
@@ -38,8 +36,5 @@ pub fn solution<T: AsRef<Path>>(input: T) -> (String, String) {
                 Direction::Forward(n) => (pos + n, depth + aim * n, aim),
             });
 
-    (
-        (part1.0 * part1.1).to_string(),
-        (part2.0 * part2.1).to_string(),
-    )
+    Answer(part1.0 * part1.1, part2.0 * part2.1)
 }
