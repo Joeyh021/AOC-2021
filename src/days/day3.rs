@@ -1,3 +1,4 @@
+use core::panic;
 use std::fs;
 
 pub fn solution(input: &str) -> (String, String) {
@@ -11,30 +12,20 @@ pub fn solution(input: &str) -> (String, String) {
                 .collect()
         })
         .collect();
-
     let bitvec_len = bits[0].len();
-    let mut bitvec = vec![(0, 0); bitvec_len];
-    for column in 0..bitvec_len {
-        for row in &bits {
-            match row[column] {
-                0 => bitvec[column].0 += 1,
-                1 => bitvec[column].1 += 1,
-                _ => panic!("youve really fucked up here. use bools dickhead"),
-            }
-        }
-    }
 
-    let gamma_string = bitvec
-        .iter()
-        .map(|(zeros, ones)| if zeros > ones { '0' } else { '1' })
-        .collect::<String>();
-    let gamma = u32::from_str_radix(&gamma_string, 2).unwrap();
-    let epsilon_string = bitvec
-        .iter()
-        .map(|(zeros, ones)| if zeros > ones { '1' } else { '0' })
-        .collect::<String>();
-    let epsilon = u32::from_str_radix(&epsilon_string, 2).unwrap();
-    let part1: String = (gamma * epsilon).to_string();
+    let column_counts = (0..bitvec_len).map(|i| count_column(&bits, i));
+
+    let gamma = bitvec_to_num(
+        column_counts
+            .clone()
+            .map(|(zeros, ones)| if zeros > ones { 0 } else { 1 }),
+    );
+
+    let epsilon =
+        bitvec_to_num(column_counts.map(|(zeros, ones)| if zeros > ones { 1 } else { 0 }));
+
+    let part1 = (gamma * epsilon).to_string();
 
     let mut oxygen_rating: Vec<Vec<u32>> = bits.clone();
     let mut column_n: usize = 0;
@@ -58,36 +49,25 @@ pub fn solution(input: &str) -> (String, String) {
         column_n += 1;
     }
 
-    let part2 = (u32::from_str_radix(
-        &oxygen_rating[0]
-            .iter()
-            .map(|bit| char::from_digit(*bit, 10).unwrap())
-            .collect::<String>(),
-        2,
-    )
-    .unwrap()
-        * u32::from_str_radix(
-            &co2_rating[0]
-                .iter()
-                .map(|bit| char::from_digit(*bit, 10).unwrap())
-                .collect::<String>(),
-            2,
-        )
-        .unwrap())
-    .to_string();
-    (part1, part2)
+    let part2 = bitvec_to_num(oxygen_rating[0].clone()) * bitvec_to_num(co2_rating[0].clone());
+
+    (part1, part2.to_string())
 }
 
-fn oxygen_bit_criteria(bits: &Vec<Vec<u32>>, column_n: usize) -> u32 {
-    let column = bits.iter().map(|row| row[column_n]);
-    let mut total = (0, 0);
-    for bit in column {
-        match bit {
-            0 => total.0 += 1,
-            1 => total.1 += 1,
-            _ => panic!("fucked up"),
-        }
-    }
+fn count_bits(bits: impl IntoIterator<Item = u32>) -> (u32, u32) {
+    bits.into_iter().fold((0, 0), |acc, elem| match elem {
+        0 => (acc.0 + 1, acc.1),
+        1 => (acc.0, acc.1 + 1),
+        _ => panic!(),
+    })
+}
+
+fn count_column(bits: &[Vec<u32>], column_n: usize) -> (u32, u32) {
+    count_bits(bits.iter().map(|row| row[column_n]))
+}
+
+fn oxygen_bit_criteria(bits: &[Vec<u32>], column_n: usize) -> u32 {
+    let total = count_column(bits, column_n);
     if total.1 >= total.0 {
         1
     } else {
@@ -95,19 +75,22 @@ fn oxygen_bit_criteria(bits: &Vec<Vec<u32>>, column_n: usize) -> u32 {
     }
 }
 
-fn co2_bit_criteria(bits: &Vec<Vec<u32>>, column_n: usize) -> u32 {
-    let column = bits.iter().map(|row| row[column_n]);
-    let mut total = (0, 0);
-    for bit in column {
-        match bit {
-            0 => total.0 += 1,
-            1 => total.1 += 1,
-            _ => panic!("fucked up"),
-        }
-    }
+fn co2_bit_criteria(bits: &[Vec<u32>], column_n: usize) -> u32 {
+    let total = count_column(bits, column_n);
     if total.0 <= total.1 {
         0
     } else {
         1
     }
+}
+
+fn bitvec_to_num<T: IntoIterator<Item = u32>>(bits: T) -> u32 {
+    u32::from_str_radix(
+        &bits
+            .into_iter()
+            .map(|bit| char::from_digit(bit, 10).unwrap())
+            .collect::<String>(),
+        2,
+    )
+    .unwrap()
 }
