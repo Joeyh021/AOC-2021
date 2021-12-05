@@ -1,19 +1,18 @@
+use std::vec;
+
 use crate::Answer;
 use regex::Regex;
-use std::{thread, time};
-fn get_eq((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> (f32, f32) {
-    let m = (y2 - y1) as f32 / (x2 - x1) as f32;
-    let c = (y1 as f32) - m * (x1 as f32);
-    (m, c)
-}
 
-fn gen_points((x1, y1): (u32, u32), (x2, y2): (u32, u32)) -> Vec<(u32, u32)> {
+fn gen_points_straight((x1, y1): (u32, u32), (x2, y2): (u32, u32)) -> Vec<(u32, u32)> {
+    if x1 == x2 && y1 == y2 {
+        vec![(x1, y1)]
+    }
     //line lies in y axis ->
-    if x1 == x2 && y2 > y1 {
+    else if x1 == x2 && y2 > y1 {
         (y1..=y2).map(|y| (x1, y)).collect()
     }
     //line lies in y axis <-
-    else if x1 == x2 && y1 >= y2 {
+    else if x1 == x2 && y1 > y2 {
         (y2..=y1).map(|y| (x1, y)).collect()
     }
     //line lies in x axis up
@@ -21,18 +20,31 @@ fn gen_points((x1, y1): (u32, u32), (x2, y2): (u32, u32)) -> Vec<(u32, u32)> {
         (x1..=x2).map(|x| (x, y1)).collect()
     }
     //line lies in y axis down
-    else if y1 == y2 && x1 >= x2 {
+    else if y1 == y2 && x1 > x2 {
         (x2..=x1).map(|x| (x, y1)).collect()
-    }
-    //diagonals
-    else {
+    } else {
         vec![]
     }
 }
 
-pub fn solution(input: String) -> Answer<u32, u32> {
+fn gen_points_all((x1, y1): (u32, u32), (x2, y2): (u32, u32)) -> Vec<(u32, u32)> {
+    if x1 > x2 && y1 > y2 {
+        (x2..=x1).zip(y2..=y1).collect()
+    } else if x2 > x1 && y2 > y1 {
+        (x1..=x2).zip(y1..=y2).collect()
+    } else if x1 > x2 && y2 > y1 {
+        (x2..=x1).zip((y1..=y2).rev()).collect()
+    } else if x2 > x1 && y1 > y2 {
+        (x1..=x2).rev().zip(y2..=y1).collect()
+    } else {
+        gen_points_straight((x1, y1), (x2, y2))
+    }
+}
+
+pub fn solution(input: String) -> Answer<usize, usize> {
     let re = Regex::new("(\\d+),(\\d+) -> (\\d+),(\\d+)").expect("could not compile regex");
-    let mut space = vec![vec![0u32; 1000]; 1000];
+    let mut space1 = vec![vec![0u32; 1000]; 1000];
+    let mut space2 = vec![vec![0u32; 1000]; 1000];
     for cap in re.captures_iter(&input) {
         let start: (u32, u32) = (
             cap[1].parse().expect("regex fail"),
@@ -43,16 +55,15 @@ pub fn solution(input: String) -> Answer<u32, u32> {
             cap[4].parse().expect("regex fail"),
         );
 
-        for (x, y) in gen_points(start, end) {
-            space[x as usize][y as usize] += 1;
+        for (x, y) in gen_points_straight(start, end) {
+            space1[x as usize][y as usize] += 1;
+        }
+        for (x, y) in gen_points_all(start, end) {
+            space2[x as usize][y as usize] += 1;
         }
     }
-    let mut sum = 0;
-    for i in space.concat() {
-        if i > 1 {
-            sum += 1;
-        }
-    }
+    let part1 = space1.concat().into_iter().filter(|i| *i > 1).count();
+    let part2 = space2.concat().into_iter().filter(|i| *i > 1).count();
     //have list of every point
-    Answer(sum, 1u32)
+    Answer(part1, part2)
 }
