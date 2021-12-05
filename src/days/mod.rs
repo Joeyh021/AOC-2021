@@ -4,12 +4,14 @@ use std::{fmt::Display, io};
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 
 pub fn solve_day(day: u32) -> Result<(), io::Error> {
     match day {
         1 => solve(day1::solution, std::fs::read_to_string("input/01.txt")?),
         2 => solve(day2::solution, std::fs::read_to_string("input/02.txt")?),
         3 => solve(day3::solution, std::fs::read_to_string("input/03.txt")?),
+        4 => solve(day4::solution, std::fs::read_to_string("input/04.txt")?),
         _ => panic!("Day not done yet"),
     }
     Ok(())
