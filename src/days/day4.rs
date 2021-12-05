@@ -1,19 +1,20 @@
 use crate::Answer;
-type Board = [[(u32, bool); 5]; 5];
+type Board = [(u32, bool); 25];
 
 fn is_winner(board: &Board) -> bool {
-    for row in board {
-        if row.map(|(_, b)| b).iter().all(|b| *b) {
+    let bools = board.map(|(_, b)| b);
+    //check each row
+    for row in 0..5 {
+        if bools[row] && bools[row + 1] && bools[row + 2] && bools[row + 3] && bools[row + 4] {
             return true;
         }
     }
-
-    for colunn_n in 0..5 {
-        if board[0][colunn_n].1
-            && board[1][colunn_n].1
-            && board[2][colunn_n].1
-            && board[3][colunn_n].1
-            && board[4][colunn_n].1
+    for column in (0..5).map(|i| i * 5) {
+        if bools[column]
+            && bools[column + 1]
+            && bools[column + 2]
+            && bools[column + 3]
+            && bools[column + 4]
         {
             return true;
         }
@@ -34,11 +35,9 @@ pub fn solution(input: String) -> Answer<u32, u32> {
     let mut boards: Vec<Board> = nums
         .chunks(25)
         .map(|board_slice| {
-            let mut board_arr = [[(0, false); 5]; 5];
+            let mut board_arr = [(0, false); 25];
             for (i, n) in board_slice.iter().enumerate() {
-                let row = i / 5;
-                let column = i % 5;
-                board_arr[row as usize][column as usize] = (*n, false);
+                board_arr[i] = (*n, false);
             }
             board_arr
         })
@@ -48,23 +47,15 @@ pub fn solution(input: String) -> Answer<u32, u32> {
     for n in sequence {
         //blot number on each board
         for b in boards.iter_mut() {
-            for row in b.iter_mut() {
-                for number in row.iter_mut() {
-                    if n == number.0 {
-                        number.1 = true;
-                    }
+            for number in b.iter_mut() {
+                if n == number.0 {
+                    number.1 = true;
                 }
             }
             //if that board is then a winner
             if is_winner(b) {
                 //sum of unmarked numbers
-                part1 = Some(
-                    b.concat()
-                        .into_iter()
-                        .map(|(i, b)| if b { 0 } else { i })
-                        .sum::<u32>()
-                        * n,
-                );
+                part1 = Some(b.map(|(i, b)| if b { 0 } else { i }).iter().sum::<u32>() * n);
                 dbg!(b);
                 break;
             }
