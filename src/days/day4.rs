@@ -44,6 +44,7 @@ pub fn solution(input: String) -> Answer<u32, u32> {
         .collect();
 
     let mut part1: Option<u32> = None;
+    let mut part2: Option<u32> = None;
     for n in sequence {
         //blot number on each board
         for b in boards.iter_mut() {
@@ -53,17 +54,31 @@ pub fn solution(input: String) -> Answer<u32, u32> {
                 }
             }
             //if that board is then a winner
-            if is_winner(b) {
+            if is_winner(b) && part1.is_none() {
                 //sum of unmarked numbers
                 part1 = Some(b.map(|(i, b)| if b { 0 } else { i }).iter().sum::<u32>() * n);
-                dbg!(b);
-                break;
             }
         }
-        if part1.is_some() {
-            break;
+        //remove all winners
+        boards = boards
+            .into_iter()
+            .filter(|board| !is_winner(board))
+            .collect();
+        dbg!(&boards.len());
+
+        if boards.len() == 2 {
+            part2 = Some(
+                boards[0]
+                    .map(|(i, b)| if b { 0 } else { i })
+                    .iter()
+                    .sum::<u32>()
+                    * n,
+            );
         }
     }
 
-    Answer(part1.expect("didnt find winner"), 1u32)
+    Answer(
+        part1.expect("didnt find winner"),
+        part2.expect("didnt find winner"),
+    )
 }
