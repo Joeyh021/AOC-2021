@@ -1,25 +1,29 @@
 use crate::Answer;
 
-pub fn solution(input: String) -> Answer<usize, usize> {
-    let mut day0: Vec<u64> = input
+pub fn solution(input: String) -> Answer<u64, u64> {
+    let fish: Vec<u64> = input
         .split(',')
         .map(|s| s.parse::<u64>().unwrap())
         .collect();
-    for _ in 0..256 {
-        breed(&mut day0);
+    let mut init_counts: [u64; 9] = [0; 9];
+    for f in fish {
+        init_counts[f as usize] += 1;
     }
-    Answer(day0.len(), 0usize)
+
+    Answer(
+        (0..80)
+            .fold(init_counts, |prev, _| breed(prev))
+            .iter()
+            .sum(),
+        (0..256)
+            .fold(init_counts, |prev, _| breed(prev))
+            .iter()
+            .sum(),
+    )
 }
 
-fn breed(fish: &mut Vec<u64>) {
-    let mut new = 0;
-    for f in fish.iter_mut() {
-        if *f == 0u64 {
-            *f = 6u64;
-            new += 1;
-        } else {
-            *f -= 1u64;
-        }
-    }
-    fish.append(&mut vec![8; new]);
+fn breed(mut counts: [u64; 9]) -> [u64; 9] {
+    counts.rotate_left(1);
+    counts[6] += counts[8];
+    counts
 }
