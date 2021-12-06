@@ -1,14 +1,14 @@
 use crate::Answer;
 
 pub fn solution(input: String) -> Answer<u64, u64> {
-    let fish: Vec<u64> = input
-        .split(',')
-        .map(|s| s.parse::<u64>().unwrap())
-        .collect();
-    let mut init_counts: [u64; 9] = [0; 9];
-    for f in fish {
-        init_counts[f as usize] += 1;
-    }
+    let init_counts =
+        input
+            .split(',')
+            .map(|s| s.parse::<u64>().unwrap())
+            .fold([0; 9], |mut counts, f| {
+                counts[f as usize] += 1;
+                counts
+            });
 
     Answer(
         (0..80)
