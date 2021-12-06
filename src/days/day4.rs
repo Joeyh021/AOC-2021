@@ -76,9 +76,5 @@ pub fn solution(input: String) -> Answer<u32, u32> {
             );
         }
     }
-
-    Answer(
-        part1.expect("didnt find winner"),
-        part2.expect("didnt find winner"),
-    )
+    Answer(part1.unwrap(), part2.unwrap())
 }
