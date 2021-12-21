@@ -8,6 +8,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 pub fn solve_day(day: u32) -> Result<(), io::Error> {
     match day {
@@ -18,6 +19,7 @@ pub fn solve_day(day: u32) -> Result<(), io::Error> {
         5 => solve(day5::solution, std::fs::read_to_string("input/05.txt")?),
         6 => solve(day6::solution, std::fs::read_to_string("input/06.txt")?),
         7 => solve(day7::solution, std::fs::read_to_string("input/07.txt")?),
+        8 => solve(day8::solution, std::fs::read_to_string("input/08.txt")?),
         _ => panic!("Day not done yet"),
     }
     Ok(())
