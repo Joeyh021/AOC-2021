@@ -2,6 +2,7 @@ use crate::Solution;
 use std::{fmt::Display, io};
 
 mod day1;
+mod day10;
 mod day2;
 mod day3;
 mod day4;
@@ -22,6 +23,7 @@ pub fn solve_day(day: u32) -> Result<(), io::Error> {
         7 => solve(day7::solution, std::fs::read_to_string("input/07.txt")?),
         8 => solve(day8::solution, std::fs::read_to_string("input/08.txt")?),
         9 => solve(day9::solution, std::fs::read_to_string("input/09.txt")?),
+        10 => solve(day10::solution, std::fs::read_to_string("input/10.txt")?),
         _ => panic!("Day not done yet"),
     }
     Ok(())
