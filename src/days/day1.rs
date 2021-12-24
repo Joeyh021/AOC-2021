@@ -1,24 +1,26 @@
 use crate::Answer;
 
 pub fn solution(input: String) -> Answer<u64, u64> {
+    let mut ans = Answer::start();
+
     let file: Vec<u64> = input
         .split_whitespace()
-        .map(|a| {
-            dbg!(a);
-            a.parse::<u64>().unwrap()
-        })
+        .map(|a| a.parse::<u64>().unwrap())
         .collect();
+
+    ans.parsed();
 
     let v = (file).iter();
     let v_1 = (file).iter().skip(1);
 
-    let mut count = 0;
+    let mut part1 = 0;
 
     for (i, j) in v.zip(v_1) {
         if j > i {
-            count += 1;
+            part1 += 1;
         }
     }
+    ans.part1(part1);
 
     let mut v1 = file.iter().skip(1);
     let mut v2 = file.iter().skip(2);
@@ -31,12 +33,15 @@ pub fn solution(input: String) -> Answer<u64, u64> {
     let t = m.iter();
     let t_1 = m.iter().skip(1);
 
-    let mut count2 = 0;
+    let mut part2 = 0;
     for (i, j) in t.zip(t_1) {
         if j > i {
-            count2 += 1;
+            part2 += 1;
         }
     }
+
+    ans.part2(part2);
+
     //part 2
-    Answer::untimed(count, count2)
+    ans
 }

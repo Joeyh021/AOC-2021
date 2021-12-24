@@ -31,6 +31,5 @@ pub fn solve_day(day: u32) -> Result<(), io::Error> {
 
 fn solve<S: Display, T: Display>(solution: Solution<S, T>, input: String) {
     let sln = solution(input);
-    println!("Part 1: {}", sln.part1.unwrap());
-    println!("Part 2: {}", sln.part2.unwrap());
+    println!("{}", sln)
 }
