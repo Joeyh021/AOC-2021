@@ -1,6 +1,8 @@
 use crate::Answer;
 
 pub fn solution(input: String) -> Answer<u32, usize> {
+    let mut ans = Answer::start();
+
     let mut nums = input
         .lines()
         .map(|s| {
@@ -9,6 +11,8 @@ pub fn solution(input: String) -> Answer<u32, usize> {
                 .collect::<Vec<u32>>()
         })
         .collect::<Vec<Vec<u32>>>();
+
+    ans.parsed();
 
     let height = nums.len();
     let width = nums[0].len();
@@ -35,7 +39,8 @@ pub fn solution(input: String) -> Answer<u32, usize> {
         }
     }
 
-    let part1 = mins.iter().map(|x| x + 1).sum();
+    ans.part1(mins.iter().map(|x| x + 1).sum());
+
     //get the size of each basin
     let mut size_list: Vec<usize> = Vec::new();
     for i in 0..nums.len() {
@@ -44,9 +49,11 @@ pub fn solution(input: String) -> Answer<u32, usize> {
             size_list.push(s);
         }
     }
+
     size_list.sort_unstable();
-    let part2 = size_list.iter().rev().take(3).product();
-    Answer::untimed(part1, part2)
+    ans.part2(size_list.iter().rev().take(3).product());
+
+    ans
 }
 
 fn basin_size(tiles: &mut Vec<Vec<u32>>, i: usize, j: usize) -> usize {
