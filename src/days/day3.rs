@@ -50,7 +50,7 @@ pub fn solution(input: String) -> Answer<u32, u32> {
 
     let part2 = bitvec_to_num(oxygen_rating[0].clone()) * bitvec_to_num(co2_rating[0].clone());
 
-    Answer(part1, part2)
+    Answer::untimed(part1, part2)
 }
 
 fn count_bits(bits: impl IntoIterator<Item = u32>) -> (u32, u32) {

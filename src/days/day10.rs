@@ -35,7 +35,7 @@ pub fn solution(input: String) -> Answer<u64, u64> {
     }
     part2_scores.sort_unstable();
     let part2 = part2_scores[part2_scores.len() / 2];
-    Answer(part1, part2)
+    Answer::untimed(part1, part2)
 }
 
 #[derive(Clone)]

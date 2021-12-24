@@ -112,5 +112,5 @@ pub fn solution(input: String) -> Answer<usize, usize> {
         .filter(|s| s.len() == 2 || s.len() == 3 || s.len() == 4 || s.len() == 7)
         .count();
 
-    Answer(part1, part2)
+    Answer::untimed(part1, part2)
 }

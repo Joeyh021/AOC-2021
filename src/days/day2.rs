@@ -36,5 +36,5 @@ pub fn solution(input: String) -> Answer<i32, i32> {
                 Direction::Forward(n) => (pos + n, depth + aim * n, aim),
             });
 
-    Answer(part1.0 * part1.1, part2.0 * part2.1)
+    Answer::untimed(part1.0 * part1.1, part2.0 * part2.1)
 }

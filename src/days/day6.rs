@@ -10,7 +10,7 @@ pub fn solution(input: String) -> Answer<u64, u64> {
                 counts
             });
 
-    Answer(
+    Answer::untimed(
         (0..80)
             .fold(init_counts, |prev, _| breed(prev))
             .iter()

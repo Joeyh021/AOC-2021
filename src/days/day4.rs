@@ -76,5 +76,5 @@ pub fn solution(input: String) -> Answer<u32, u32> {
             );
         }
     }
-    Answer(part1.unwrap(), part2.unwrap())
+    Answer::untimed(part1.unwrap(), part2.unwrap())
 }

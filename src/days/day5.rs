@@ -65,5 +65,5 @@ pub fn solution(input: String) -> Answer<usize, usize> {
     let part1 = space1.concat().into_iter().filter(|i| *i > 1).count();
     let part2 = space2.concat().into_iter().filter(|i| *i > 1).count();
     //have list of every point
-    Answer(part1, part2)
+    Answer::untimed(part1, part2)
 }

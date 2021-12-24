@@ -46,7 +46,7 @@ pub fn solution(input: String) -> Answer<u32, usize> {
     }
     size_list.sort_unstable();
     let part2 = size_list.iter().rev().take(3).product();
-    Answer(part1, part2)
+    Answer::untimed(part1, part2)
 }
 
 fn basin_size(tiles: &mut Vec<Vec<u32>>, i: usize, j: usize) -> usize {
@@ -113,6 +113,6 @@ fn print_square(list: &[Vec<u32>]) {
 fn test() {
     let test_input = String::from("2199943210\n3987894921\n9856789892\n8767896789\n9899965678");
     let soln = solution(test_input);
-    assert_eq!(soln.0, 15);
-    assert_eq!(soln.1, 1134);
+    assert_eq!(soln.part1, Some(15));
+    assert_eq!(soln.part2, Some(1134));
 }

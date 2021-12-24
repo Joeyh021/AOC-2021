@@ -24,16 +24,16 @@ pub fn solution(input: String) -> Answer<i64, i64> {
             (n * (n + 1)) / 2
         })
         .sum();
-    Answer(part1, part2)
+    Answer::untimed(part1, part2)
 }
 
 #[test]
 fn test_1() {
     let input = String::from("16,1,2,0,4,2,7,1,2,14");
-    assert_eq!(solution(input).0, 37);
+    assert_eq!(solution(input).part1, Some(37));
 }
 #[test]
 fn test_2() {
     let input = String::from("16,1,2,0,4,2,7,1,2,14");
-    assert_eq!(solution(input).1, 168);
+    assert_eq!(solution(input).part2, Some(168));
 }

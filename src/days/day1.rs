@@ -38,5 +38,5 @@ pub fn solution(input: String) -> Answer<u64, u64> {
         }
     }
     //part 2
-    Answer(count, count2)
+    Answer::untimed(count, count2)
 }
